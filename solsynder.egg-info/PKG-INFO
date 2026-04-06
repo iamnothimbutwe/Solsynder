@@ -1,0 +1,31 @@
+Metadata-Version: 2.4
+Name: solsynder
+Version: 0.1.62
+Summary: A Real-time solar system calendar that focuses on presenting the data in a readable format to the user from astlo
+Home-page: https://github.com/iamnothimbutwe/Solsynder
+Author: @iamnothimbutwe Github and Gitlab. Macharia
+Author-email: markmacgh@gmail.com/hecateare@gmail.com
+License: Copyright (c) 2026. All rights reserved
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: COPYRIGHT
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engeneering :: Astronomy :: Astrophysics
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: plotext
+Requires-Dist: rich
+Requires-Dist: click
+Requires-Dist: astlo>=v5.62.53
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Solsynder
+A real time Solar System calendar for 15+ solar system bodies.  Just for ease of use

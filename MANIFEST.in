@@ -1,0 +1,3 @@
+include CODEOWNERS
+include LICENSE
+global-exclude *.pyc
