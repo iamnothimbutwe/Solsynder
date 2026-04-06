@@ -126,7 +126,7 @@ class Synder:
 
         retur = self.synder()
         retu = contin.barycentric('earth')
-        pt = contin.anmte('earth',None,'y')
+        pt = contin.anmte('earth',None,'y') # function anmte contains 4 arguments. self,name,rt,ret for period in seconds orbit plot and scatter.it is a bound method. ..ret for returning the plotext object.
         ax,ay,az = contin.acce('earth')
         lst = [ax,ay,az]
 
@@ -150,7 +150,7 @@ class Synder:
 
 
         for _,x in enumerate(retur['name']):
-            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]}',f'{retur['light_delay_Geo'][_]}',f'{retur['lightdelay_sun'][_]}',f'{retur['r_helio'][_]}',f'{retur['inclination'][_]}',f'{retur['v_helio'][_]}',f'{retur['falclimb'][_]}',f'{retur['aphperi'][_]}')
+            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000} km\n{retur['d_helio'][_]/contin.AU_m} AU',f'{retur['light_delay_Geo'][_]} s\n{retur['light_delay_Geo'][_]/60} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}')
             
         console.print(table)
 

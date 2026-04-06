@@ -18,6 +18,7 @@ One command. One screen. Live view of the entire solar system.
   - Distances in **AU** and **km**
   - Velocities and other values in appropriate SI units
   - Time-related values in **minutes** where needed
+  - one Osculating element ¦inclination¦ in degrees° ¦reference frame is J2000 and the epoch is real time
 - Runs smoothly on mobile (Termux on Android / Itel RS4 and similar devices)
 - Pure Python, lightweight, and built from scratch on a budget phone
 
@@ -75,6 +76,7 @@ astlo >= 5.63.53 (only dependency)
 
 License..
 MIT License — feel free to use, modify, and contribute.
+
 Get Involved
 Found a bug? Want a new feature?
 Open an issue or pull request on GitHub.
