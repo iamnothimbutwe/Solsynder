@@ -31,7 +31,7 @@ One command. One screen. Live view of the entire solar system.
 pip install -e .
 
 # Run the calendar
-Solsynder pin
+solsynder pin
 
 
 Live positions and states for Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Ceres, and other dwarf planets

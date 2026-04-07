@@ -8,9 +8,21 @@ import os
 import platform
 import math
 import time
+import sys
+
+
+console = Console()
+
+try:
+    from astlo import Contin, Vectors
+
+except ModuleNotFoundError:
+    console.print('[bold red]astlo v5.63.53 and above is required. Please install then try again[/bold red]')
+    sys.exit(0)
+
 
 contin = Contin()
-console = Console()
+#console = Console()
 vectors = Vectors()
 
 
