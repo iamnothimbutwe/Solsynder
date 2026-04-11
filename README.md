@@ -72,7 +72,7 @@ Search for specific bodies
 More user-friendly features (open to suggestions!)
 
 Dependencies..
-astlo >= 5.63.53 (only dependency)
+astlo >= 5.71.73 (only dependency)
 
 License..
 MIT License — feel free to use, modify, and contribute.
