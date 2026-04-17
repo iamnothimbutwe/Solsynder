@@ -24,6 +24,9 @@ One command. One screen. Live view of the entire solar system.
 
 ---
 
+>..join us at r/kenyaspacenerds..
+
+
 ## Quick Start
 
 ```bash

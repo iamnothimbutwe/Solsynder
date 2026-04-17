@@ -1,7 +1,7 @@
 
 
 #
-from astlo import Contin, Vectors
+from astlo import Contin, Vectors, Mat
 from rich.console import Console
 from rich.table import Table
 import os
@@ -24,6 +24,7 @@ except ModuleNotFoundError:
 contin = Contin()
 #console = Console()
 vectors = Vectors()
+mat = Mat()
 
 
 class Synder:
@@ -128,13 +129,34 @@ class Synder:
         return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work
 
 
-    def pin(self):
+    def pin(self,full=None,cont=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and
         '''the print function'''
 
         if os.name=='nt':
             os.system('cls')
         else:
-            os.system('clear') 
+            os.system('clear')
+
+
+        if full:
+            pe = mat.fulplot() # the fulplot 3D full solarsystem
+            #pt.show()
+
+            #print('..rendered')
+
+            if cont:
+                #pe.show()
+                print('   ..rendered and continuing to earth')
+                #g = 'continue' #will continie to earth part
+            else:
+                #pe.show()
+                print('rendered 3D')
+                pe.show()
+                return #the pr must exit
+
+
+                
+                
 
         retur = self.synder()
         retu = contin.barycentric('earth')
@@ -173,6 +195,7 @@ class Synder:
         #print(f'''\n##REAL TIME PLOT FOR EARTH AT {retu['Unix_time']}//{time.asctime()}##\n\n''')
 
         pt.show()
+        pe.show()
 
 
         
