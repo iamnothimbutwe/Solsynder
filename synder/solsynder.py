@@ -129,13 +129,19 @@ class Synder:
         return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work
 
 
-    def pin(self,full=None,cont=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and
+    def pin(self,full=None,cont=None,earth='2D'): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
         '''the print function'''
 
         if os.name=='nt':
             os.system('cls')
         else:
             os.system('clear')
+
+        earth = earth.upper()
+
+        if full and cont and earth=='3D':
+            console.print('[bold yellow]Either use parameters full with cont or earth only. cannot render both full and earth in 3D.')
+            return
 
 
         if full:
@@ -146,11 +152,11 @@ class Synder:
 
             if cont:
                 #pe.show()
-                print('   ..rendered and continuing to earth')
+                print('   ..rendered full real-time solar system view 3D  and continuing to earth')
                 #g = 'continue' #will continie to earth part
             else:
                 #pe.show()
-                print('rendered 3D')
+                print('rendered full solar system real-time 3D only')
                 pe.show()
                 return #the pr must exit
 
@@ -161,6 +167,7 @@ class Synder:
         retur = self.synder()
         retu = contin.barycentric('earth')
         pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
+        #ppe = mat.matpt('earth') #earth 3ad visual
         ax,ay,az = contin.acce('earth')
         lst = [ax,ay,az]
 
@@ -190,23 +197,23 @@ class Synder:
 
 
 
-        console.print(f'''\n\n[bold green]              ..EARTH REAL TIME STATES RELATIVE HELIOCENTER..\n\nUnix time since J2000: [/bold green][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold green]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold green][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold green]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold green]\n\n[bold green]Orbital velocity: [/bold green][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold green]Mean and Eccentric anomalies: [/bold green][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold green]Light Delay from Heliocenter to Earth: [/bold green][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold green]Orbital Day out of 365.25: [/bold green][bold white]{retu['resp_day']}[/bold white]\n\n[bold green]Gravitational acceleration due to other bodies: [/bold green][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
+        console.print(f'''\n\n[bold Cyan]              ..EARTH REAL TIME STATES RELATIVE HELIOCENTER..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
 
         #print(f'''\n##REAL TIME PLOT FOR EARTH AT {retu['Unix_time']}//{time.asctime()}##\n\n''')
 
-        pt.show()
-        pe.show()
+        if earth=='2D':
+            print('\nrendering earth real-time pos in 2D\n')
+            pt.show() #2d render
+        elif earth=='3D':
+            ppe = mat.matpt('earth')
+            print('\nrendering earth real-time pos in 3D\n')
+            ppe.show() #3d render
+        else:
+            console.print(f'\n\n[bold red]...earth 2D or 3D only.\nYou entered: {earth}[/bold red]')
+            return
 
-
-        
-
-
-
-
-
-
-
-       
-
+        #pt.show()
+        if full:
+            pe.show()
 
 
