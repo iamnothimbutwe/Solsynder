@@ -36,6 +36,8 @@ pip install -e .
 # Run the calendar
 solsynder pin
 
+or just solsynder pin --help to get the help on the pin commamd
+
 
 Live positions and states for Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Ceres, and other dwarf planets
 Special Earth Section showing:
