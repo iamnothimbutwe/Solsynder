@@ -39,18 +39,19 @@ solsynder pin
 or just solsynder pin --help to get the help on the pin commamd
 
 
-Live positions and states for Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Ceres, and other dwarf planets
+Live positions and states for Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Ceres, Haumea, Makemake, Hygiea, Pallas, Vesta, Eris. in one view in one coloured table.
+A full 3D render of the entire Solar System in real time [optional]
 Special Earth Section showing:
 Current distance from Sun (AU + km)
 Velocity vectors
 Orbital anomalies and energy
 Real-time position in the orbital plot
-Clean terminal plot showing the current orbital configuration
-Everything updates continuously so you can watch the solar system move in real time.
+Clean terminal plot showing the current orbital configuration plus an optional 3D render and real time position. [2D is the default and 3D is optional. use --help to navigate the CLI Command Line Interface
+Everything updates continuously so you can watch the solar system move in real time. [astlo does this. the real time continous moving]
 
 Why Solsynder?
 I built this because I wanted a simple, fast way to see where everything is right now — without heavy libraries or internet.
-astlo handles all the hard orbital math (osculating elements, vectors, ephemeris).
+astlo handles all the heavy orbital math (osculating elements, vectors, custom ephemeris).
 Solsynder focuses on presenting it beautifully in one screen.
 
 It’s designed for:
@@ -77,7 +78,7 @@ Search for specific bodies
 More user-friendly features (open to suggestions!)
 
 Dependencies..
-astlo >= 5.71.73 (only dependency)
+astlo >= 7.78.173 (only dependency) beta version
 
 License..
 MIT License — feel free to use, modify, and contribute.
