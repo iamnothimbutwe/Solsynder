@@ -129,8 +129,26 @@ class Synder:
         return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work
 
 
-    def pin(self,full=None,cont=None,earth='2D'): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
+    def pin(self,full=None,cont=None,earth='2D',jview=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
         '''the print function'''
+
+       # if os.name=='nt':
+      #      os.system('cls')
+     #   else:
+    #        os.system('clear')
+
+        #earth = earth.upper() ##========#=#=#=#=#=can render multiple screens #=#=#=#=###==#=
+
+       # if full and cont and earth=='3D':
+          #  console.print('[bold yellow]Either use parameters full with cont or earth only. cannot render both full and earth in 3D.')
+         #   return
+        #elif full and cont and jview and earth=='3D':
+         #   console.print('[bold yellow]Either use paramteres full with cont or full only or earth only or jview and cont or jupiter only.[/bold yellow]')
+          #  return
+
+#####=====IT CAN RENDER MULTIPLE SCREENS ===#==#=#
+
+
 
         if os.name=='nt':
             os.system('cls')
@@ -139,9 +157,7 @@ class Synder:
 
         earth = earth.upper()
 
-        if full and cont and earth=='3D':
-            console.print('[bold yellow]Either use parameters full with cont or earth only. cannot render both full and earth in 3D.')
-            return
+
 
 
         if full:
@@ -152,17 +168,27 @@ class Synder:
 
             if cont:
                 #pe.show()
-                print('   ..rendered full real-time solar system view 3D  and continuing to earth')
+                print('   ..rendered full real-time solar system view 3D  and continuing to Solsynder core.')
                 #g = 'continue' #will continie to earth part
             else:
                 #pe.show()
                 print('rendered full solar system real-time 3D only')
                 pe.show()
-                return #the pr must exit
+                return # must exit
 
 
-                
-                
+        if jview:
+            ok = mat.fulplot('y') #returns jupiter and inner planets realtime render.
+
+            if cont:
+                print('   ..rendered jupiter and inner planets view 3D  and continuing to Solsynder core.')
+
+            else:
+                print('rendered jupiter and inner planets real-time 3D only')
+                ok.show()
+                return
+
+
 
         retur = self.synder()
         retu = contin.barycentric('earth')

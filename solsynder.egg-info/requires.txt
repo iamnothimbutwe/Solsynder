@@ -1,4 +1,0 @@
-plotext
-rich
-click
-astlo>=v7.78.173
