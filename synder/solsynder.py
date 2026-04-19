@@ -239,6 +239,8 @@ class Synder:
             return
 
         #pt.show()
+        if jview:
+            ok.show()
         if full:
             pe.show()
 
