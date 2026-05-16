@@ -44,7 +44,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="solsynder",
-    version="v0.5.200",
+    version="v0.6.250",
     packages=find_packages(),
     install_requires=["plotext", "rich", "click", 'astlo>=v7.80.173'], #dont ned to add astlo here becose its handled at the top
     include_package_data=True,

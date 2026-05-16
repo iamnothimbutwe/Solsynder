@@ -34,7 +34,7 @@ class Synder:
 
     def synder(self):
         '''the whole solar system calendar is Earth centric Geocentric'''
-        values = ['MERCURY','VENUS','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']
+        values = ['MERCURY','VENUS','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']
         M_p = [5.85, 5.86, 5.87, 5.88, 5.89, 5.9, 5.91, 5.92, 5.93, 5.94, 5.95, 5.96, 5.97, 5.98, 5.99, 6.0, 6.01, 6.02, 6.03, 6.04, 6.05, 6.06, 6.07, 6.08, 6.09, 6.1, 6.11, 6.12, 6.13, 6.14, 6.15, 6.16, 6.17, 6.18, 6.19, 6.2, 6.21, 6.22, 6.23, 6.24, 6.25, 6.26, 6.27, 6.28] # 5.85 M to 6.28 M == periehlion approach 
 
         M_a = [2.85, 2.86, 2.87, 2.88, 2.89, 2.9, 2.91, 2.92, 2.93, 2.94, 2.95, 2.96, 2.97, 2.98, 2.99, 3.0, 3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08, 3.09, 3.1, 3.11, 3.12, 3.13, 3.14] #aphelion 2.85 to 3.14
@@ -77,8 +77,8 @@ class Synder:
             list_name.append(retur['name'])
             list_mean_anomaly.append(retur['M'])
             list_day_rep.append(retur['resp_day'])
-            list_dhelio.append(retur['d_helio'])
-            list_lighthelio.append(retur['light_delay_helio'])
+            list_dhelio.append(retur['d_helio'] if _!='EARTH' else None)
+            list_lighthelio.append(retur['light_delay_helio'] if _!='EARTH' else None)
             list_light_delaysunhel.append(retur['light_delay_sun_helio'])
             list_r_helio.append(retur['r_helio'])
             list_inclination.append(retur['osc_ihelio'])
@@ -217,7 +217,7 @@ class Synder:
 
 
         for _,x in enumerate(retur['name']):
-            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000} km\n{retur['d_helio'][_]/contin.AU_m} AU',f'{retur['light_delay_Geo'][_]} s\n{retur['light_delay_Geo'][_]/60} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}')
+            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000 if retur['d_helio'][_] else None} km\n{retur['d_helio'][_]/contin.AU_m if retur['d_helio'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}')
             
         console.print(table)
 
