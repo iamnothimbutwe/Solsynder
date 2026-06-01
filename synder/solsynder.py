@@ -18,6 +18,7 @@ try:
 
 except ModuleNotFoundError:
     console.print('[bold red]astlo v5.63.53 and above is required. Please install then try again[/bold red]')
+    #return 'astlo>=v5.63.53 not found'
     sys.exit(0)
 
 
@@ -57,6 +58,9 @@ class Synder:
         fallingor_climbing = []
         signum = []
         aphperi = []
+        list_X_helio = []
+        list_Y_helio = []
+        list_Z_helio = []
 
         for _ in values:
             check = contin.barycentric(_)
@@ -82,6 +86,10 @@ class Synder:
             list_light_delaysunhel.append(retur['light_delay_sun_helio'])
             list_r_helio.append(retur['r_helio'])
             list_inclination.append(retur['osc_ihelio'])
+            list_X_helio.append(retur['X_helio'])
+            list_Y_helio.append(retur['Y_helio'])
+            list_Z_helio.append(retur['Z_helio'])
+
 
             #magnitude of velocity vector
             v_helio = math.sqrt(math.pow(retur['v_Xhelio'],2) + math.pow(retur['v_Yhelio'],2) + math.pow(retur['v_Zhelio'],2))
@@ -96,7 +104,7 @@ class Synder:
         for _,old_vhelio in enumerate(v):
 
             delta_v = list_velochelio[_] - old_vhelio
-            fallingor_climbing.append(delta_v) #for all 15 bodies
+            fallingor_climbing.append(delta_v) #for all 16 bodies
 
         for _ in fallingor_climbing:
             #sign = vectors.signum(_)
@@ -123,10 +131,208 @@ class Synder:
             aphperi.append(val)
 
         #retu = contin.barycentric('earth')
-        #ax,ay,az = contin.acce('earth')  
+        #ax,ay,az = contin.acce('earth')
+
+        ##chord calculator nearest planet to X##
+        chord_mercury = []
+        chord_venus = []
+        chord_earth = []
+        chord_mars = []
+        chord_vesta = []
+        chord_ceres = []
+        chord_pallas = []
+        chord_hygiea = []
+        chord_jupiter = []
+        chord_saturn = []
+        chord_uranus = []
+        chord_neptune = []
+        chord_pluto = []
+        chord_haumea = []
+        chord_makemake = []
+        chord_eris = []
+
+
+   #     for n in values: #the later to be used min and max built in methods need one type of object not m8xed..
+    #        if n=='MERCURY':
+     #           for _,idx in enumerate(list_X_helio):
+      #              if _==0: #Mercury
+       #                 chord_mercury.append(1e50) #changed from strings to very large intergerss for min
+        #                
+         #               list_target = [list_X_helio[0],list_Y_helio[0],list_Z_helio[0]] #mercury at index 0
+          #              continue
+#
+ #                   list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]#the puller..or the other obj
+  #                  chord_m = vectors.magn_vect(list_target,list_att)
+   #                 chord_mercury.append(chord_m[8]) #index 8 is the chord in the vectors module magn method
+    #            continue
+#
+ #           if n=='VENUS':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==1: #venus at index 
+    #                    chord_venus.append(1e50)
+     #                   
+      #                  list_target = [list_X_helio[1],list_Y_helio[1],list_Y_helio[1]]
+       #                 continue
+        #            list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+         #           chord_m = vectors.magn_vect(list_target,list_att)
+          #          chord_venus.append(chord_m[8])
+#
+ #               continue
+#
+#
+ #           if n=='EARTH':
+  ##              for _,idx in enumerate(list_X_helio):
+    #                if _==2:
+     #                   chord_earth.append(1e50)
+    #
+     #                   list_target = [list_X_helio[2],list_Y_helio[2],list_Z_helio[2]]
+      #                  continue
+#
+ #                   list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+  #                  chord_m = vectors.magn_vect(list_target,list_att) #i used _m beacuse i wamted to start with mercury and remembered that i can just override/overwrite the variables
+   #                 chord_earth.append(chord_m[8])
+
+    #            continue
+#
+ #           if n=='MARS':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==3:
+    #                    chord_mars.append(1e50)
+     #                   
+      #                  list_target = [list_X_helio[3],list_Y_helio[3],list_Z_helio[3]]
+       #                 continue
+        #            list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+         #           chord_m = vectors.magn_vect(list_target,list_att)
+          #          chord_mars.append(chord_m[8])
+#
+ #               continue
+#
+ #           if n=='VESTA':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==4:
+    #                    chord_vesta.append(1e50)
+     #                   
+      #                  list_target = [list_X_helio[4],list_Y_helio[4],list_Z_helio[4]]
+       #                 continue
+#
+ #                   list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+  #                  chord_m = vectors.magn_vect(list_target,list_att)
+   #                 chord_vesta.append(chord_m[8])
+#
+#
+ #               continue
+#
+ #           if n=='CERES':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==5:
+    #                    chord_ceres.append(1e50)                       
+     #                   list_target = [list_X_helio[5],list_Y_helio[5],list_Z_helio[5]]
+      #                  continue
+#
+ #                   list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+  #                  chord_m = vectors.magn_vect(list_target,list_att)
+   #                 chord_ceres.append(chord_m[8])
+#
+#
+ #               continue
+#
+ #           if n=='PALLAS':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==6:
+    #                    chord_pallas.append(1e50)
+     #7#7#                   list_target = [list_X_helio[6],list_Y_helio[6],list_Z_helio[6]]
+          #              continue
+           #         list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+            #7##        chord_m = vectors.magn_vect(list_target,list_att)
+                #    chord_pallas.append(chord_m[8])
+#
+#
+ #               continue
+#
+ #           if n=='HYGIEA':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==7:
+    #                    chord_hygiea.append(1e50)
+     #                   list_target = [list_X_helio[7],list_Y_helio[7],list_Z_helio[7]]
+      #                  continue
+#
+ #                   list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+  #                  chord_m = vectors.magn_vect(list_target,list_att)
+   #                 chord_hygiea.append(chord_m[8])
+#
+ #               continue
+#
+ #           if n=='JUPITER':
+  #              for _,idx in enumerate(list_X_helio):
+#
+ #                   if _==8:
+  #                      chord_jupiter.append(1e50)
+   #                     list_target = [list_X_helio[8],list_Y_helio[8],list_Z_helio[8]]
+    #                    continue
+     #               list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+      #              chord_m = vectors.magn_vect(list_target,list_att)
+       #             chord_jupiter.append(chord_m[8])
+#
+ #               continue
+#
+ #           if n=='SATURN':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==9:
+    #                    chord_saturn.append(1e50)
+     #                   list_target = [list_X_helio[9],list_Y_helio[9],list_Z_helio[9]]
+      #                  continue
+       #             list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+        #            chord_m = vectors.magn_vect(list_target,list_att)
+#
+ #                   chord_saturn.append(chord_m[8])
+#
+#
+ #               continue
+#
+ #           if n=='URANUS':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==10:
+    #                    chord_uranus.append(1e50)
+     #                   list_target = [list_X_helio[10],list_Y_helio[10],list_Z_helio[10]]
+      #                  continue
+       #             list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+        #            chord_m = vectors.magn_vect(list_target,list_att)
+         #           chord_uranus.append(chord_m[8])
+#
+ #               continue
+#
+ #           if n=='NEPTUNE':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==11:
+    #                    chord_neptune.append(1e50)
+     #                   list_target = [list_X_helio[11],list_Y_helio[11],list_Z_helio[11]]
+      #                  continue
+       #             list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+        #            chord_m = vectors.magn_vect(list_target,list_att)
+         #           chord_neptune.append(chord_m[8])
+#
+ #               continue
+#
+ #           if n=='PLUTO':
+  #              for _,idx in enumerate(list_X_helio):
+   #                 if _==12:
+    #                    chord_pluto.append(1e50)
+     #                   list_target = [list_X_helio[12],list_Y_helio[12],list_Z_helio[12]]
+      #                  continue
+       #             list_att = [list_X_helio[_],list_Y_helio[_],list_Z_helio[_]]
+        #            chord_m = vectors.magn_vect(list_target,list_att)
+         #           chord_pluto.append(chord_m[8])
+#
+ #               continue
+
+  #          if n=='HAUMEA':
+   #             for _,idx in enumerate(list_X_helio):
+    #                if _==13:
+     #                   chord_ha
+#
         
 
-        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work
+        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work ...the chord lisys contain the chord btwn obj X and y
 
 
     def pin(self,full=None,cont=None,earth='2D',jview=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
@@ -190,6 +396,16 @@ class Synder:
 
 
 
+
+        valu = ['chord_mercury','chord_venus','chord_earth','chord_mars','chord_vesta','chord_ceres','chord_pallas','chord_hygiea','chord_jupiter','chord_saturn','chord_uranus','chord_neptune','chord_pluto','chord_haumea','chord_makemake','chord_eris']
+        valuesi = ['MERCURY','VENUS','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']
+
+
+
+      #  nearfar_full = [] #the full array thoigh im not using numpy 16 objects with 16 values
+       # nearfar_raw = [] #this storesbthe raw value 
+        #nearfar = [] # this stores the human readable value the name
+
         retur = self.synder()
         retu = contin.barycentric('earth')
         pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
@@ -198,6 +414,15 @@ class Synder:
         lst = [ax,ay,az]
 
         mgn = vectors.magn_vect(lst)
+
+
+            ###add thebmaximum chord..the farthes object..or the secind nearest object..
+            
+
+
+
+
+
         
 
         ##table##
@@ -211,13 +436,18 @@ class Synder:
         table.add_column('Distance from\nHeliocenter to X',style='Cyan')
         table.add_column('Inclination of X orbit\nRelative the Heliocentric equator',style='magenta')
         table.add_column('Orbital velocity\nRelative Heliocenter',style='Cyan')
+        #table.add_column('Nearest body',style='white')
         table.add_column('Falling Towards Sun\n/Climbing from sun',style='magenta')
         table.add_column('Approaching Perihelion\nApproaching Aphelion',style='Cyan')
+        table.add_column('Nearest object',style='white')
+        table.add_column('Farthest object',style='white')
 
 
 
         for _,x in enumerate(retur['name']):
-            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000 if retur['d_helio'][_] else None} km\n{retur['d_helio'][_]/contin.AU_m if retur['d_helio'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}')
+            maxim = contin.chord(x,'y') #the secomd argument acfivates the maximum logic
+            minim = contin.chord(x) #default is minimum
+            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000 if retur['d_helio'][_] else None} km\n{retur['d_helio'][_]/contin.AU_m if retur['d_helio'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}',f'{minim['nearest']}',f'{maxim['farthest']}')
             
         console.print(table)
 
