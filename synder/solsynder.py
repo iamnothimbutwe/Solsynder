@@ -1,7 +1,7 @@
 
 
 #
-from astlo import Contin, Vectors, Mat
+#from astlo import Contin, Vectors, Mat
 from rich.console import Console
 from rich.table import Table
 import os
@@ -14,10 +14,10 @@ import sys
 console = Console()
 
 try:
-    from astlo import Contin, Vectors
+    from astlo import Contin, Vectors, Mat
 
 except ModuleNotFoundError:
-    console.print('[bold red]astlo v5.63.53 and above is required. Please install then try again[/bold red]')
+    console.print('[bold red]astlo v8.300.300 and above is required. Please install then try again[/bold red]')
     #return 'astlo>=v5.63.53 not found'
     sys.exit(0)
 
