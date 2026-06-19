@@ -410,6 +410,7 @@ class Synder:
         retu = contin.barycentric('earth')
         pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
         #ppe = mat.matpt('earth') #earth 3ad visual
+        lun = contin.rtime(None,None,None,'y') #last argument is luna
         ax,ay,az = contin.acce('earth')
         lst = [ax,ay,az]
 
@@ -426,7 +427,7 @@ class Synder:
         
 
         ##table##
-        table = Table(title=f'THE SOLAR SYSTEM CALENDAR.\nSOLSYNDER AT {time.time()}//{time.asctime()}.\nREAL TIME STATES J2000. HELIOCENTRIC FRAME')#style='yellow')
+        table = Table(title=f'THE SOLAR SYSTEM CALENDAR.\nSOLSYNDER AT {time.time()}//{time.asctime()}.\nREAL TIME STATES J2000. HELIOCENTRIC FRAME.\n¦use Astlo to get the full states for Barycentric and Heliocentric frames¦')#style='yellow')
         table.add_column('Name',style='Cyan')
         table.add_column('Mean anomaly',style='magenta')
         table.add_column('Respective\nOrbital Day',style='Cyan')
@@ -453,7 +454,8 @@ class Synder:
 
 
 
-        console.print(f'''\n\n[bold Cyan]              ..EARTH REAL TIME STATES RELATIVE HELIOCENTER..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
+        console.print(f'''\n\n[bold Cyan]              ..EARTH-Luna System REAL TIME STATES RELATIVE HELIOCENTER and BARYCENTER ¦use Astlo to get the full states for both frames¦..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
+        console.print(f'\n{lun}')
 
         #print(f'''\n##REAL TIME PLOT FOR EARTH AT {retu['Unix_time']}//{time.asctime()}##\n\n''')
 

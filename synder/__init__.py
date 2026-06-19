@@ -14,7 +14,7 @@ Solsynder focuses on presenting the real time states of the bodies in one single
 
 '''
 
-__version__ = 'v1.6.300'
+__version__ = 'v2.7.300'
 __author__ = 'iamnothimbutwe |macharia|. markmacgh@gmail.com/hecateare@gmail.com'
 
 from .solsynder import Synder
