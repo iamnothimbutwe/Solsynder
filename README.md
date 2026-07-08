@@ -1,7 +1,7 @@
 # Solsynder
 
 
->..you can overide the astlo version requirement by updating the astlo version in the install_requires variable in the setup.py file..
+>..you can overide the astlo version requirement by updating the astlo version in the install_requires variable in the setup.py file. Some features might not work if you do not have the reaqired version for Astlo. 
 
 **Real-time Solar System Calendar**  
 Powered by **astlo** — built entirely on mobile.
