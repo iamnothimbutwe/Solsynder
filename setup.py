@@ -46,7 +46,7 @@ setup(
     name="solsynder",
     version="v2.7.300",
     packages=find_packages(),
-    install_requires=["plotext", "rich", "click", 'astlo>=v8.300.300'], #dont ned to add astlo here becose its handled at the top
+    install_requires=["plotext", "rich", "click", 'astlo>=v10.350.500'], #dont ned to add astlo here becose its handled at the top
     include_package_data=True,
     entry_points={
         "console_scripts": [
@@ -54,8 +54,8 @@ setup(
         ],
     },
     python_requires=">=3.8",
-    author="@iamnothimbutwe Github and Gitlab. Macharia",
-    author_email="markmacgh@gmail.com/hecateare@gmail.com",
+    author="@iamnothimbutwe Github and Gitlab.",
+    #author_email="markmacgh@gmail.com/hecateare@gmail.com", should add the official entity email
     description="A Real-time solar system calendar that focuses on presenting the data in a readable format to the user from astlo",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

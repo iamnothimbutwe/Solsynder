@@ -1,0 +1,16 @@
+CODEOWNERS
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.py
+solsynder.egg-info/PKG-INFO
+solsynder.egg-info/SOURCES.txt
+solsynder.egg-info/dependency_links.txt
+solsynder.egg-info/entry_points.txt
+solsynder.egg-info/requires.txt
+solsynder.egg-info/top_level.txt
+synder/__init__.py
+synder/interface.py
+synder/main.py
+synder/solsynder.py

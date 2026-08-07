@@ -13,13 +13,49 @@ import sys
 
 console = Console()
 
+import sys
+#import astlo
+from packaging import version
+
+
+
+
 try:
-    from astlo import Contin, Vectors, Mat
+    #import astlo
+    from astlo import Contin, Vectors, Mat, __version__
+    from packaging import version
+   
+    required_version = version.parse("v10.350.500")
+    installed_version = version.parse(__version__)
+
+    if installed_version < required_version:
+        print("\n❌🚫 ERROR: Solsynder requires astlo >= v10.350.500")
+        print(f"   You have astlo {__version__} installed.")
+        print("   Please upgrade with:   pip install ¦new .whl file¦ the .whl files are available in the releases section of the public repo to astlo")
+        print("   Then try installing Solsynder again.\n")
+        sys.exit(1)
+ 
+except ImportError as r:
+    print("\n❌🚫 ERROR: Solsynder requires astlo to be installed first.")
+    print("   Please install astlo with: astlo>=v10.350.500 from the public repo to astlo")
+    print("   Then try installing Solsynder again.\n")
+    print(f'{r}')
+    sys.exit(1)
+
+#except Exception as e:
+ #   Fallback in case packaging module is missing
+  #  print(f"\n⚠️ 🚫  Warning: Could not verify astlo version ({e})")
+   # print("   Continuing anyway...\n")
+   # pass
+
 
 except ModuleNotFoundError:
-    console.print('[bold red]astlo v8.300.300 and above is required. Please install then try again[/bold red]')
+    console.print('[bold red]astlo is required. Please install then try again[/bold red]')
     #return 'astlo>=v5.63.53 not found'
-    sys.exit(0)
+    sys.exit(1) #exit code 0 = success while exit code 1 = failure
+
+#setup only checksbifbastlonis installed ..then this part habdlesnthe versioj part
+
 
 
 contin = Contin()
@@ -134,22 +170,22 @@ class Synder:
         #ax,ay,az = contin.acce('earth')
 
         ##chord calculator nearest planet to X##
-        chord_mercury = []
-        chord_venus = []
-        chord_earth = []
-        chord_mars = []
-        chord_vesta = []
-        chord_ceres = []
-        chord_pallas = []
-        chord_hygiea = []
-        chord_jupiter = []
-        chord_saturn = []
-        chord_uranus = []
-        chord_neptune = []
-        chord_pluto = []
-        chord_haumea = []
-        chord_makemake = []
-        chord_eris = []
+      #  chord_mercury = []
+       # chord_venus = []
+        #chord_earth = []
+       # chord_mars = []
+  #      chord_vesta = []
+   #     chord_ceres = []
+    #    chord_pallas = []
+     #   chord_hygiea = []
+      #  chord_jupiter = []
+       # chord_saturn = []
+       # chord_uranus = []
+      #  chord_neptune = []
+     #   chord_pluto = []
+    #    chord_haumea = []
+   #     chord_makemake = []
+  #      chord_eris = []
 
 
    #     for n in values: #the later to be used min and max built in methods need one type of object not m8xed..
