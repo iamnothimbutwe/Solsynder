@@ -9,7 +9,7 @@ import platform
 import math
 import time
 import sys
-from asho import Asho #AstloHorizon
+#from asho import Asho #AstloHorizon
 
 
 console = Console()
