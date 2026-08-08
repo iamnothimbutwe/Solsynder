@@ -1,4 +1,0 @@
-plotext
-rich
-click
-astlo>=v8.300.300

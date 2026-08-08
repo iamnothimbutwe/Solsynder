@@ -9,6 +9,7 @@ import platform
 import math
 import time
 import sys
+from asho import Asho #AstloHorizon
 
 
 console = Console()
@@ -23,6 +24,7 @@ from packaging import version
 try:
     #import astlo
     from astlo import Contin, Vectors, Mat, __version__
+    from asho import Asho #2nd requirement
     from packaging import version
    
     required_version = version.parse("v10.350.500")
@@ -50,7 +52,7 @@ except ImportError as r:
 
 
 except ModuleNotFoundError:
-    console.print('[bold red]astlo is required. Please install then try again[/bold red]')
+    console.print('[bold red]astlo and astlohorizons are required. Please install then try again[/bold red]')
     #return 'astlo>=v5.63.53 not found'
     sys.exit(1) #exit code 0 = success while exit code 1 = failure
 
@@ -62,6 +64,7 @@ contin = Contin()
 #console = Console()
 vectors = Vectors()
 mat = Mat()
+astloo = Asho()
 
 
 class Synder:
@@ -446,7 +449,7 @@ class Synder:
         retu = contin.barycentric('earth')
         pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
         #ppe = mat.matpt('earth') #earth 3ad visual
-        lun = contin.rtime(None,None,None,'y') #last argument is luna
+   #     lun = contin.rtime(None,None,None,'y') #last argument is luna
         ax,ay,az = contin.acce('earth')
         lst = [ax,ay,az]
 
@@ -490,8 +493,12 @@ class Synder:
 
 
 
-        console.print(f'''\n\n[bold Cyan]              ..EARTH-Luna System REAL TIME STATES RELATIVE HELIOCENTER and BARYCENTER ¦use Astlo to get the full states for both frames¦..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
-        console.print(f'\n{lun}')
+        console.print(f'''\n\n[bold Cyan]              ..EARTH-Luna System REAL TIME STATES RELATIVE HELIOCENTER and BARYCENTER and EMB ¦use Astlo to get the full states for both frames¦..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
+     #   console.print(f'\n{lun}')
+        ###astlohorizons##
+        datluna = astloo.luna()
+
+        console.print(f'''[yellow]The Earth-moon System relative the EMB - Earth-moon Barycenter[/yellow]\n[cyan]Name: [/cyan][bold white]{datluna['name']}[/bold white]\n[cyan]Time: [/cyan][bold white]{datluna['time']} ¦ Unix:{datluna['unix_time']} ¦ {datluna['unix_simple']}[/bold white]\n[cyan]Luna current distance relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_pos_vect_rel_EMB'])/1000} -km-[bold white]\n[cyan]Luna current velocity relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_vel_vect_rel_EMB'])/1000} -km/s-[/bold white]\n\n[yellow]Relative Earth true center -Geocenter- <This part needs to get fixed>: [/yellow]\n[cyan]Luna current distance relative Geocenter: [/cyan][bold white]vectors.magn_vect(datluna['moon_geo_pos_vect'])/1000 -km-[/bold white]\n[cyan]Luna current velocity relative Geocenter: [/cyan][bold white]vectors.magn_vect(datluna['moon_geo_vel_vect'])/1000 -km/s-[/bold white]\n\n[yellow]current 'Phase'° degrees -emphasis on phase- and illumination element k.[/yellow]\n[cyan]Phase: [/cyan][bold white]{datluna['phase_deg']}°[/bold white]\n[cyan]Illumination element k and percentage k%: [/cyan][bold white]{datluna['face']} ¦ {datluna['face_perc']}%[/bold white]\n\n[cyan]Current Face: [/cyan][bold white]{astloo.lunaface()}\n\n\n\n[yellow]Access the osculating elements through the SDK part of astlohorizons class Asho[/yellow]''')
 
         #print(f'''\n##REAL TIME PLOT FOR EARTH AT {retu['Unix_time']}//{time.asctime()}##\n\n''')
 
