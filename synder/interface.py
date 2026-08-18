@@ -7,7 +7,7 @@ from .solsynder import Synder
 # ---------------------------------------------------------
 
 @click.group
-@click.version_option(version='Solsynder v2.7.300')
+@click.version_option(version='Solsynder v2.10.300')
 @click.pass_context
 def sin(ctx):
     ctx.obj = Synder()
