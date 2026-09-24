@@ -50,8 +50,8 @@ Current distance from Sun (AU + km)
 Velocity vectors
 Orbital anomalies and energy
 Real-time position in the orbital plot
-Clean terminal plot showing the current orbital configuration plus an optional 3D render and real time position. [2D is the default and 3D is optional. use --help to navigate the CLI Command Line Interface
-Everything updates continuously so you can watch the solar system move in real time. [astlo does this. the real time continous moving]
+Clean terminal plot showing the current orbital configuration plus an optional 3D render and real time position. [2D is the default and 3D is optional. use --help to navigate the CLI Command Line Interface 
+
 
 Why Solsynder?
 I built this because I wanted a simple, fast way to see where everything is right now — without heavy libraries or internet.
@@ -65,16 +65,9 @@ Anyone who wants to play with real solar system    data on their phone
 
 
 Built on Mobile
-
-Every line of code was written and tested on an Android phone (Itel RS4) using Termux.
-No big computers.
+Every line of code was written and tested on an Android phone using Termux.
 
 No heavy dependencies.
-
-Just pure Python and persistence.
-
-
-Coming Soon..
 
 Better plot customization
 Export options
@@ -82,15 +75,11 @@ Search for specific bodies
 More user-friendly features (open to suggestions!)
 
 Dependencies..
-astlo >= 7.78.173 (only dependency) beta version
+astlo >= 12.0.0 (only dependency)
 
 License..
 MIT License — feel free to use, modify, and contribute.
 
 Get Involved
 Found a bug? Want a new feature?
-Open an issue or pull request on GitHub.
-Let’s grow Kenya Sovereign Tech together.
-
-Made with ❤️ in Naivasha, Kenya
-by Mark Macharia (iamnothimbutwe)
+Open an issue or pull request on GitHub

@@ -1,5 +1,5 @@
 plotext
 rich
 click
-astlo>=v10.350.500
+astlo>=v12.0.0
 astlohorizons

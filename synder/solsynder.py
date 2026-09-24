@@ -27,7 +27,7 @@ try:
     from asho import Asho #2nd requirement
     from packaging import version
    
-    required_version = version.parse("v10.350.500")
+    required_version = version.parse("v12.0.0")
     installed_version = version.parse(__version__)
 
     if installed_version < required_version:
