@@ -25,13 +25,13 @@ try:
     #import astlo
     from astlo import Contin, Vectors, Mat, __version__
     from asho import Asho #2nd requirement
-    from packaging import version
+    #from packaging import version
    
-    required_version = version.parse("v12.0.0")
+    required_version = version.parse("v12.5.0")
     installed_version = version.parse(__version__)
 
     if installed_version < required_version:
-        print("\n❌🚫 ERROR: Solsynder requires astlo >= v10.350.500")
+        print("\n❌🚫 ERROR: Solsynder requires astlo >= v12.5.0")
         print(f"   You have astlo {__version__} installed.")
         print("   Please upgrade with:   pip install ¦new .whl file¦ the .whl files are available in the releases section of the public repo to astlo")
         print("   Then try installing Solsynder again.\n")
@@ -39,7 +39,7 @@ try:
  
 except ImportError as r:
     print("\n❌🚫 ERROR: Solsynder requires astlo to be installed first.")
-    print("   Please install astlo with: astlo>=v10.350.500 from the public repo to astlo")
+    print("   Please install astlo with: astlo>=v12.5.0 from the public repo to astlo")
     print("   Then try installing Solsynder again.\n")
     print(f'{r}')
     sys.exit(1)
