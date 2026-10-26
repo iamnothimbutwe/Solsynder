@@ -72,9 +72,17 @@ class Synder:
     def __init__(self):
         self.mission = 'to make space science and cosmic events available to anyone with a mobile phone or just a simple command line without requiring heavy libraries and the internet'
 
-    def synder(self):
-        '''the whole solar system calendar is Earth centric Geocentric'''
-        values = ['MERCURY','VENUS','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']
+    def synder(self,frame='H',days: float=None):
+        '''the whole solar system calendar is Earth centric Geocentric,Heliocentric and optional Berycentric'''
+      #  values = ['MERCURY','VENUS','HALLEY','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']# discontinued.. use self.values_tt..use the internl astlo format.
+        frame = frame.upper()
+        supp = ('H','B')
+        if frame!='H' and frame not in supp:
+            return 'frame type not supported. Either Heliocentric or Barycentric'
+
+        if frame=='H' and days:
+            return 'days option can only work with Barycentric frame for rungekutta integration'
+
         M_p = [5.85, 5.86, 5.87, 5.88, 5.89, 5.9, 5.91, 5.92, 5.93, 5.94, 5.95, 5.96, 5.97, 5.98, 5.99, 6.0, 6.01, 6.02, 6.03, 6.04, 6.05, 6.06, 6.07, 6.08, 6.09, 6.1, 6.11, 6.12, 6.13, 6.14, 6.15, 6.16, 6.17, 6.18, 6.19, 6.2, 6.21, 6.22, 6.23, 6.24, 6.25, 6.26, 6.27, 6.28] # 5.85 M to 6.28 M == periehlion approach 
 
         M_a = [2.85, 2.86, 2.87, 2.88, 2.89, 2.9, 2.91, 2.92, 2.93, 2.94, 2.95, 2.96, 2.97, 2.98, 2.99, 3.0, 3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08, 3.09, 3.1, 3.11, 3.12, 3.13, 3.14] #aphelion 2.85 to 3.14
@@ -100,8 +108,155 @@ class Synder:
         list_X_helio = []
         list_Y_helio = []
         list_Z_helio = []
+        list_nu = [] #truebanomalh...
+        list_resp_day_stepped = []
+        list_Omega = [] #longitude of ascending node
+        list_omega = [] #osc elems only for bargcentric way...use astlo to get for both heliocentric and barycentricb.....the argument of periapsis. if it was heliocenteic then arg of periheoion but Barycentric
+        list_a = []
+        list_e = [] #remmebr osc elems only for barycentric frame. Barycenyric frmae only shows the real time osculating elememtns and the only stepped value is days. use astlo....
+        list_light_delayssb = []
+        list_r_bary = []
+        list_grav_acc = []
+        list_velobary = []
+        list_lightbary = []
+        list_r_bary = []
+        list_dbary = []
+        
+# days
 
-        for _ in values:
+        if frame=='B':
+            '''Barycentric frame'''
+          #  for _ in values:
+           #     check = contin.barycentric(_)
+            if days:
+                check = contin.rungekutta(None,None,None,days)
+           #     true_anonaly = contin.oscelems(check)
+            else:
+                check = contin.rungekutta()
+
+          #  chvhelio = math.sqrt(math.pow(check['v_Xhelio'],2) + math.pow(check['v_Yhelio'],2) + math.pow(check['v_Zhelio'],2))
+            for idx,itm in enumerate(contin.supp_objs_names):
+                chvhelio = vectors.magn_vect(check['new_pos_vectors'][idx]) #shine so bright...remember sol is at index 0 therefore index+1
+                v.append(chvhelio)                                                                                                               
+            time.sleep(5) #to obtain new velocity values after delta t 1..for compatibility..
+
+
+
+
+
+        #retu = contin.barycentric('earth') # the target the Geocentric rule for this project
+        #ax,ay,az = contin.acce('earth') # real time gravitational acceleration due to other 15 bodies for earth
+
+            for idx,itm in enumerate(contin.supp_objs_names): #was using self.values_tt but sun should also invluded in barycentruc logic.
+                '''barycentric has the best details. The heliocentric part is old. starting with sun as an object'''
+                retur = contin.barycentric(itm)
+                list_name.append(itm)
+            #    list_mean_anomaly.append(retur['M'] if itm!='SUN' else ) #real time..
+                oscelem = contin.oscelems(check['new_pos_vectors'][idx],check['new_pos_vectors'][idx],idx,'B') #contin.barycentric also returns all the states including the osculating elements but used oscelem method becuase of rungekutta barycentric logic..
+                true_anomaly = oscelem['true_anomaly'] #degrees
+                Omega = oscelem['Omega']
+                omega = oscelem['argof_perihelion']
+                eccent = oscelem['osc_e']
+                semi_major_axis = oscelem['osc_a']/contin.AU_m #from m to AU
+
+                list_mean_anomaly.append(retur['M'] if itm!='SUN' else math.radians(true_anomaly)) #if sun, then thw true anonaly is the mean anonaly...
+
+                list_nu.append(true_anonaly)
+                list_Omega.append(Omega)
+                list_omega.append(omega)
+                list_a.append(semi_major_axis)
+                list_e.append(eccent)
+            #    day_conv = contin.periods[itm]*contin.earthperiod_d
+
+                if days and itm!='SUN':
+                    day_conv = contin.periods[itm]*contin.earthperiod_d
+                    resp_day_stepped = (true_anomaly/360)*day_conv #using rafians or degrees will result in yhe same fraction that you project to the number of days the object perido has..
+                 #   resp_day =  use retur['resp_day'] for the real time days.
+                    list_resp_day_stepped.append(resp_day_stepped) #the true anonaly uses the nu drom check.ru gekutta
+                elif days==None and itm!='SUN':
+                    day_conv = contin.periods[itm]*contin.earthperiod_d
+                 #   resp_day = (true_anomaly/360)*day_conv #i k ow what im doong...yes i can just leave the if else statement and just use the resp_day variable but i want to diffrentiate the resp_day real time and the time stwpped resp_day for the pin method that printa to the terminal..
+                    resp_day_stepped = None
+                    list_resp_day_stepped.append(resp_day_stepped)
+                elif itm=='SUN': #regardless of days or not
+                    list_resp_day_stepped.append(None) #astlo does not know thebl period of sun relatjve ssb therefore for sun both day_resp and day_stepped = None
+               #     list_day_rep.append(None)
+
+
+                list_day_rep.append(retur['resp_day'] if itm!='SUN' else None) #show both the current and time stepped resp day fro. the true anonaly..should use the true rungekutta true anonaly for rightness haaaha...this shows the real time..if days is None then resp_day_stepped = None.
+                dbary_vector = vectors.sub_vect(check['new_pos_vectors'][idx],check['new_pos_vectors'][contin.supp_objs.get('EARTH','ERROR')]) #if Earth then the resultnis 0,0,0 == None
+                dbary = vectors.magn_vect(dbary)/contin.AU_m #AU if dbary_vector==[0,0,0] then dbary=0.0
+
+                list_dbary.append(d_bary if itm!='EARTH' else None)
+
+                light_delay_bary = dbary/contin.c_m_s #speed of light in  m/s
+                list_lightbary.append(light_delay_bary if itm!='EARTH' else None) #seconds..
+                
+                light_delay_ssb = check['new_pos_vectors'][idx]/contin.c_m_s #seconds
+                list_light_delayssb.append(light_delay_ssb) #yeah i know there is a diff btwn sun and SSB..mostly SSB is inside the sun so.....
+
+                r_bary = check['new_pos_vectors'][idx]/contin.AU_m #AU
+                list_r_bary.append(r_bary) #AU
+                list_inclination.append(oscelem['osc_i']) #barycentric
+                list_grav_acc.append(vectors.magn_vect(check['new_acc_vectors'][idx])) #only the displayed resp_day_stepped is timestepped if days..if days, the other values ..
+          #      list_X_helio.append(retur['X_helio'])
+           #     list_Y_helio.append(retur['Y_helio'])
+            #    list_Z_helio.append(retur['Z_helio']) #discontinuing this...use astlo to get the states...the full states..
+
+
+                #magnitude of velocity vector
+             #   v_helio = math.sqrt(math.pow(retur['v_Xhelio'],2) + math.pow(retur['v_Yhelio'],2) + math.pow(retur['v_Zhelio'],2))
+                v_bary = vectors.magn_vect(check['new_vel_vectors'][idx]/1000) #should follow best practice..show if days corrwcltt amd if not days corrwctly the values..km/s
+
+                list_velobary.append(v_bary)
+
+                #vallues.append(retur)
+
+            #decide if climbing or falling using the real time orbital velovity vector magnitude.
+
+
+            for _,old_vhelio in enumerate(v):
+
+                delta_v = list_velochelio[_] - old_vhelio
+                fallingor_climbing.append(delta_v) #for all 16 bodies...now 21 objects - sun = 20 orbitng objectsm
+
+            for _ in fallingor_climbing:
+                #sign = vectors.signum(_)
+                if _<0:
+                    hu = 'negative'
+                elif _>0:
+                    hu = 'positive'
+                signum.append(hu) #positive if falling and negative if climbing...signum is good for large numbers use x<0 boolean to check if negative or positive
+
+            #at perhelion or aphelion ? ssb though..
+            for _ in list_mean_anomaly:
+                j = contin.trunc(_,2) #here....astlo.trunc truncates a float number by the number of decimal places...literally truncates without rounding off...
+                if j in M_p:
+                    val = 'APPROACHING PERIAPSIS. CLOSEST POINT TO SUN-SSB'
+                elif j in M_a:
+                    val = 'APPROACHING APOAPIS. FARTHEST POINT FROM SUN-SSB'
+                #elif j==3.14:
+                    #val = 'AT APHELION. FARTHEST POINT FROM SUN'
+                #elif j==0:
+                #   val = 'AT PERIHELION. NEW YEAR. CLOSEST POINT TO SUN'
+                else:
+                    val = 'NO MAJOR ORBITAL EVENT ABOUT TO TAKE PLACE'
+
+                aphperi.append(val)
+
+            if days:
+                utc_time = f'{check['utc_time']} + (1hr for rk4 and {days} days)'
+            else:
+                utc_time = f'{check['utc_time']} + (1hr for rk4)'
+
+            return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'resp_day_stepped':list_resp_day_stepped,'d_bary':list_dbary,'light_delay_Geo':list_lightbary,'lightdelay_ssb':list_light_delayssb,'r_bary':list_r_bary,'grav_acc':list_grav_acc,,'eccent':list_e,'semi_major_axis':list_a,'true_anonaly':list_nu,'inclination':list_inclination,'v_bary':list_velobary,'Omega':list_Omega,'omega':list_omega,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'B','utc_time':utc_time}
+
+
+
+
+            ###HELIOCENTRICBFRAME###
+
+        for _ in contin.values_tt:
             check = contin.barycentric(_)
             chvhelio = math.sqrt(math.pow(check['v_Xhelio'],2) + math.pow(check['v_Yhelio'],2) + math.pow(check['v_Zhelio'],2))
             v.append(chvhelio)
@@ -115,7 +270,7 @@ class Synder:
         #retu = contin.barycentric('earth') # the target the Geocentric rule for this project
         #ax,ay,az = contin.acce('earth') # real time gravitational acceleration due to other 15 bodies for earth
 
-        for _ in values:
+        for _ in contin.values_tt:
             retur = contin.barycentric(_)
             list_name.append(retur['name'])
             list_mean_anomaly.append(retur['M'])
@@ -155,7 +310,7 @@ class Synder:
 
         #at perhelion or aphelion ?
         for _ in list_mean_anomaly:
-            j = round(_,2)
+            j = contin.trunc(_,2)
             if j in M_p:
                 val = 'APPROACHING PERIHELION. CLOSEST POINT TO SUN'
             elif j in M_a:
@@ -371,7 +526,7 @@ class Synder:
 #
         
 
-        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing} #return everything even the table/plotext object then the print function to follow will do the light work ...the chord lisys contain the chord btwn obj X and y
+        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'H'} #return everything even the table/plotext object then the print function to follow will do the light work ...the chord lisys contain the chord btwn obj X and y
 
 
     def pin(self,full=None,cont=None,earth='2D',jview=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
