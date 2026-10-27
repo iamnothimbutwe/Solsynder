@@ -72,7 +72,7 @@ class Synder:
     def __init__(self):
         self.mission = 'to make space science and cosmic events available to anyone with a mobile phone or just a simple command line without requiring heavy libraries and the internet'
 
-    def synder(self,frame='H',days: float=None):
+    def synder(self,frame: str='H',days: float=None):
         '''the whole solar system calendar is Earth centric Geocentric,Heliocentric and optional Berycentric'''
       #  values = ['MERCURY','VENUS','HALLEY','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']# discontinued.. use self.values_tt..use the internl astlo format.
         frame = frame.upper()
@@ -147,25 +147,26 @@ class Synder:
         #retu = contin.barycentric('earth') # the target the Geocentric rule for this project
         #ax,ay,az = contin.acce('earth') # real time gravitational acceleration due to other 15 bodies for earth
 
-            for idx,itm in enumerate(contin.supp_objs_names): #was using self.values_tt but sun should also invluded in barycentruc logic.
+            for idx,itm in enumerate(contin.supp_objs_names.keys()): #was using self.values_tt but sun should also invluded in barycentruc logic.
                 '''barycentric has the best details. The heliocentric part is old. starting with sun as an object'''
-                retur = contin.barycentric(itm)
+                retur = contin.barycentric(itm) if itm!='SUN' else 'sun'
                 list_name.append(itm)
             #    list_mean_anomaly.append(retur['M'] if itm!='SUN' else ) #real time..
-                oscelem = contin.oscelems(check['new_pos_vectors'][idx],check['new_pos_vectors'][idx],idx,'B') #contin.barycentric also returns all the states including the osculating elements but used oscelem method becuase of rungekutta barycentric logic..
+            #    print(f'ITM: ({itm}), IDX: ({idx})')
+                oscelem = contin.oscelem(check['new_pos_vectors'][idx],check['new_vel_vectors'][idx],idx,'B') #contin.barycentric also returns all the states including the osculating elements but used oscelem method becuase of rungekutta barycentric logic..
                 true_anomaly = oscelem['true_anomaly'] #degrees
-                Omega = oscelem['Omega']
-                omega = oscelem['argof_perihelion']
-                eccent = oscelem['osc_e']
-                semi_major_axis = oscelem['osc_a']/contin.AU_m #from m to AU
+             #   Omega = oscelem['Omega']
+              #  omega = oscelem['argof_perihelion']
+              #  eccent = oscelem['osc_e']
+               # semi_major_axis = oscelem['osc_a']/contin.AU_m #from m to AU
+    #idf days, anaything tied to vectors from contin.rungekutta adapt to days value 
+                list_mean_anomaly.append(retur['M'] if itm!='SUN' else math.radians(true_anomaly)) #if sun, then thw true anonaly is the mean anonaly...Real time..regardless of days stepped or not...but the nu if days, adapts_to days stepped...
 
-                list_mean_anomaly.append(retur['M'] if itm!='SUN' else math.radians(true_anomaly)) #if sun, then thw true anonaly is the mean anonaly...
-
-                list_nu.append(true_anonaly)
-                list_Omega.append(Omega)
-                list_omega.append(omega)
-                list_a.append(semi_major_axis)
-                list_e.append(eccent)
+                list_nu.append(true_anomaly)
+           #     list_Omega.append(Omega)
+            #    list_omega.append(omega)
+             #   list_a.append(semi_major_axis)
+              #  list_e.append(eccent)
             #    day_conv = contin.periods[itm]*contin.earthperiod_d
 
                 if days and itm!='SUN':
@@ -185,17 +186,17 @@ class Synder:
 
                 list_day_rep.append(retur['resp_day'] if itm!='SUN' else None) #show both the current and time stepped resp day fro. the true anonaly..should use the true rungekutta true anonaly for rightness haaaha...this shows the real time..if days is None then resp_day_stepped = None.
                 dbary_vector = vectors.sub_vect(check['new_pos_vectors'][idx],check['new_pos_vectors'][contin.supp_objs.get('EARTH','ERROR')]) #if Earth then the resultnis 0,0,0 == None
-                dbary = vectors.magn_vect(dbary)/contin.AU_m #AU if dbary_vector==[0,0,0] then dbary=0.0
+                dbary = vectors.magn_vect(dbary_vector)/contin.AU_m #AU if dbary_vector==[0,0,0] then dbary=0.0
 
-                list_dbary.append(d_bary if itm!='EARTH' else None)
+                list_dbary.append(dbary if itm!='EARTH' else None)
 
                 light_delay_bary = dbary/contin.c_m_s #speed of light in  m/s
                 list_lightbary.append(light_delay_bary if itm!='EARTH' else None) #seconds..
                 
-                light_delay_ssb = check['new_pos_vectors'][idx]/contin.c_m_s #seconds
+                light_delay_ssb = vectors.magn_vect(check['new_pos_vectors'][idx])/contin.c_m_s #seconds
                 list_light_delayssb.append(light_delay_ssb) #yeah i know there is a diff btwn sun and SSB..mostly SSB is inside the sun so.....
 
-                r_bary = check['new_pos_vectors'][idx]/contin.AU_m #AU
+                r_bary = vectors.magn_vect(check['new_pos_vectors'][idx])/contin.AU_m #AU
                 list_r_bary.append(r_bary) #AU
                 list_inclination.append(oscelem['osc_i']) #barycentric
                 list_grav_acc.append(vectors.magn_vect(check['new_acc_vectors'][idx])) #only the displayed resp_day_stepped is timestepped if days..if days, the other values ..
@@ -206,7 +207,7 @@ class Synder:
 
                 #magnitude of velocity vector
              #   v_helio = math.sqrt(math.pow(retur['v_Xhelio'],2) + math.pow(retur['v_Yhelio'],2) + math.pow(retur['v_Zhelio'],2))
-                v_bary = vectors.magn_vect(check['new_vel_vectors'][idx]/1000) #should follow best practice..show if days corrwcltt amd if not days corrwctly the values..km/s
+                v_bary = vectors.magn_vect(check['new_vel_vectors'][idx])/1000 #should follow best practice..show if days corrwcltt amd if not days corrwctly the values..km/s
 
                 list_velobary.append(v_bary)
 
@@ -217,7 +218,7 @@ class Synder:
 
             for _,old_vhelio in enumerate(v):
 
-                delta_v = list_velochelio[_] - old_vhelio
+                delta_v = list_velobary[_] - old_vhelio
                 fallingor_climbing.append(delta_v) #for all 16 bodies...now 21 objects - sun = 20 orbitng objectsm
 
             for _ in fallingor_climbing:
@@ -249,7 +250,7 @@ class Synder:
             else:
                 utc_time = f'{check['utc_time']} + (1hr for rk4)'
 
-            return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'resp_day_stepped':list_resp_day_stepped,'d_bary':list_dbary,'light_delay_Geo':list_lightbary,'lightdelay_ssb':list_light_delayssb,'r_bary':list_r_bary,'grav_acc':list_grav_acc,,'eccent':list_e,'semi_major_axis':list_a,'true_anonaly':list_nu,'inclination':list_inclination,'v_bary':list_velobary,'Omega':list_Omega,'omega':list_omega,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'B','utc_time':utc_time}
+            return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'resp_day_stepped':list_resp_day_stepped,'d_bary':list_dbary,'light_delay_Geo':list_lightbary,'lightdelay_ssb':list_light_delayssb,'r_bary':list_r_bary,'grav_acc':list_grav_acc,'true_anomaly':list_nu,'inclination':list_inclination,'v_bary':list_velobary,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'B','utc_time':utc_time}
 
 
 
@@ -526,10 +527,15 @@ class Synder:
 #
         
 
-        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'H'} #return everything even the table/plotext object then the print function to follow will do the light work ...the chord lisys contain the chord btwn obj X and y
+        return {'name':list_name,'mean_anomaly':list_mean_anomaly,'resp_day':list_day_rep,'d_helio':list_dhelio,'light_delay_Geo':list_lighthelio,'lightdelay_sun':list_light_delaysunhel,'r_helio':list_r_helio,'inclination':list_inclination,'v_helio':list_velochelio,'falclimb':signum,'aphperi':aphperi,'falclimbraw':fallingor_climbing,'frame':'H','utc_time':check['utc_time']} #return everything even the table/plotext object then the print function to follow will do the light work ...the chord lisys contain the chord btwn obj X and y
 
 
-    def pin(self,full=None,cont=None,earth='2D',jview=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
+
+
+
+
+
+    def pin(self,full=None,cont=None,earth: str='2D',jview=None,frame: str='H',days: float=None): #default is pure python with plotext and full is numpy and matplotlib, cont for orinting both plotext and 3D..earth 2d or 3d optional
         '''the print function'''
 
        # if os.name=='nt':
@@ -557,8 +563,15 @@ class Synder:
 
         earth = earth.upper()
 
+        frame = frame.upper() #always contains a value...
+        supp = ('H','B')
+        if frame!='H' and frame not in supp:
+            console.print('[red]frame passed is not supported[/red]')
+            return
 
-
+        if frame=='H' and days:
+            console.print('[red]days argument can only work with Barycentric B frame[/red]')
+            return
 
         if full:
             pe = mat.fulplot() # the fulplot 3D full solarsystem
@@ -591,8 +604,18 @@ class Synder:
 
 
 
-        valu = ['chord_mercury','chord_venus','chord_earth','chord_mars','chord_vesta','chord_ceres','chord_pallas','chord_hygiea','chord_jupiter','chord_saturn','chord_uranus','chord_neptune','chord_pluto','chord_haumea','chord_makemake','chord_eris']
-        valuesi = ['MERCURY','VENUS','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS']
+        valu = ['chord_mercury','chord_venus','chord_earth','chord_mars','chord_vesta','chord_ceres','chord_pallas','chord_hygiea','chord_jupiter','chord_saturn','chord_uranus','chord_neptune','chord_pluto','chord_haumea','chord_makemake','chord_eris','chord_halley','chord_apophis','chord_bennu','chord_eros']
+        valuesi = ['MERCURY','VENUS','EARTH','MARS','VESTA','CERES','PALLAS','HYGIEA','JUPITER','SATURN','URANUS','NEPTUNE','PLUTO','HAUMEA','MAKEMAKE','ERIS','HALLEY','APOPHIS','BENNU','EROS']
+
+        ##global##
+        #retur = self.synder()
+        retu = contin.barycentric('earth') #calling another ru gekutta will be time boring..
+        pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
+        #ppe = mat.matpt('earth') #earth 3ad visual
+        #     lun = contin.rtime(None,None,None,'y') #last argument is luna
+        ax,ay,az = contin.acce('earth')
+        lst = [ax,ay,az]
+        mgn = vectors.magn_vect(lst)
 
 
 
@@ -600,15 +623,64 @@ class Synder:
        # nearfar_raw = [] #this storesbthe raw value 
         #nearfar = [] # this stores the human readable value the name
 
-        retur = self.synder()
-        retu = contin.barycentric('earth')
-        pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
+        if frame=='B':
+
+            if days:
+                retur = self.synder('B',days)
+            else:
+                retur = self.synder('B')
+
+            retu = contin.barycentric('earth')
+
+
+            ##table##
+            table = Table(title=f'THE SOLAR SYSTEM CALENDAR.\nSOLSYNDER AT UTC {retur['utc_time']}//Localtime {time.asctime()}.\nREAL TIME STATES J2000. BARYCENTRIC FRAME.\nThe nearest object to Earth is Luna and Cruithne its captured asteroid\n¦use Astlo to get osculating elements or the full states for Barycentric, Heliocentric and Topocentric frames¦')#style='yellow')
+            table.add_column('Name',style='Cyan')
+            table.add_column('Mean anomaly',style='magenta')
+            table.add_column('Respective\nReal-time\nOrbital Day',style='Cyan')
+            table.add_column(f'Respective\nOrbital day after\nTime stepped\n{days} days',style='yellow')
+            table.add_column('Chord.\nDistance to X from Earth\n/Vice versa',style='magenta')
+            table.add_column('Light Delay\nfrom X to Earth\n/Vice versa',style='Cyan')
+            table.add_column('Light Delay from\nBarycenter to X',style='magenta')
+            table.add_column('Distance from\nBarycenter to X',style='Cyan')
+            table.add_column('Gravitational\nacceleration a',style='bold white')
+            table.add_column('Inclination of Xs orbit\nRelative the Ecliptic',style='magenta')
+            table.add_column('True anomaly\nNu',style='yellow')
+            table.add_column('Orbital velocity\nRelative Barycenter',style='Cyan')
+            #table.add_column('Nearest body',style='white')
+            table.add_column('Falling Towards Sun\n/Climbing from sun',style='magenta')
+            table.add_column('Approaching Periapsis\nApproaching Apoapis',style='Cyan')
+            table.add_column('Nearest object',style='bold white')
+            table.add_column('Farthest object',style='bold white')
+
+
+
+            for _,x in enumerate(retur['name']):
+                if days:
+                    maxim = contin.chord(x,'y',days) #the secomd argument acfivates the maximum logic
+                    minim = contin.chord(x,None,days) #default is minimum
+                else:
+                    maxim = contin.chord_bary(x,'y')
+                    minim = contin.chord_bary(x)
+
+                table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['resp_day_stepped'][_]}',f'{retur['d_bary'][_]/1000 if retur['d_bary'][_] else None} km\n{retur['d_bary'][_]/contin.AU_m if retur['d_bary'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_ssb'][_]} s\n{retur['lightdelay_ssb'][_]/60} minutes',f'{retur['r_bary'][_]/1000} km\n{retur['r_bary'][_]/contin.AU_m} AU',f'{retur['grav_acc'][_]} m/s^2',f'{retur['inclination'][_]}°',f'{retur['true_anomaly'][_]}°',f'{retur['v_bary'][_]} m/s\n{retur['v_bary'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}',f'{minim['nearest']}',f'{maxim['farthest']}')
+
+            console.print(table)
+
+
+
+    
+        ##global##
+
+        #retur = self.synder()
+    #    retu = contin.barycentric('earth') #calling another ru gekutta will be time boring..
+     #   pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
         #ppe = mat.matpt('earth') #earth 3ad visual
    #     lun = contin.rtime(None,None,None,'y') #last argument is luna
-        ax,ay,az = contin.acce('earth')
-        lst = [ax,ay,az]
+      #  ax,ay,az = contin.acce('earth')
+       # lst = [ax,ay,az]
 
-        mgn = vectors.magn_vect(lst)
+        #mgn = vectors.magn_vect(lst)
 
 
             ###add thebmaximum chord..the farthes object..or the secind nearest object..
@@ -618,36 +690,39 @@ class Synder:
 
 
 
-        
-
-        ##table##
-        table = Table(title=f'THE SOLAR SYSTEM CALENDAR.\nSOLSYNDER AT {time.time()}//{time.asctime()}.\nREAL TIME STATES J2000. HELIOCENTRIC FRAME.\n¦use Astlo to get the full states for Barycentric and Heliocentric frames¦')#style='yellow')
-        table.add_column('Name',style='Cyan')
-        table.add_column('Mean anomaly',style='magenta')
-        table.add_column('Respective\nOrbital Day',style='Cyan')
-        table.add_column('Chord.\nDistance to X from Earth\n/Vice versa',style='magenta')
-        table.add_column('Light Delay\nfrom X to Earth\n/Vice versa',style='Cyan')
-        table.add_column('Light Delay from\nHeliocenter..Sun.. to X',style='magenta')
-        table.add_column('Distance from\nHeliocenter to X',style='Cyan')
-        table.add_column('Inclination of X orbit\nRelative the Heliocentric equator',style='magenta')
-        table.add_column('Orbital velocity\nRelative Heliocenter',style='Cyan')
-        #table.add_column('Nearest body',style='white')
-        table.add_column('Falling Towards Sun\n/Climbing from sun',style='magenta')
-        table.add_column('Approaching Perihelion\nApproaching Aphelion',style='Cyan')
-        table.add_column('Nearest object',style='white')
-        table.add_column('Farthest object',style='white')
+        if frame=='H':
+            retur = self.synder()
 
 
+            ##table##
+            table = Table(title=f'THE SOLAR SYSTEM CALENDAR.\nSOLSYNDER AT UTC{retur['utc_time']}//{time.asctime()}.\nREAL TIME STATES J2000. HELIOCENTRIC FRAME.\nThe closest object to Earth is Luna and its captured asteroid Cruithne\n¦use Astlo to get the full states for Barycentric and Heliocentric frames¦')#style='yellow')
+            table.add_column('Name',style='Cyan')
+            table.add_column('Mean anomaly',style='magenta')
+            table.add_column('Respective\nOrbital Day',style='Cyan')
+            table.add_column('Chord.\nDistance to X from Earth\n/Vice versa',style='magenta')
+            table.add_column('Light Delay\nfrom X to Earth\n/Vice versa',style='Cyan')
+            table.add_column('Light Delay from\nHeliocenter..Sun.. to X',style='magenta')
+            table.add_column('Distance from\nHeliocenter to X',style='Cyan')
+            table.add_column('Inclination of X orbit\nRelative the Ecliptic',style='magenta')
+            table.add_column('Orbital velocity\nRelative Heliocenter',style='Cyan')
+            #table.add_column('Nearest body',style='white')
+            table.add_column('Falling Towards Sun\n/Climbing from sun',style='magenta')
+            table.add_column('Approaching Perihelion\nApproaching Aphelion',style='Cyan')
+            table.add_column('Nearest object',style='white')
+            table.add_column('Farthest object',style='white')
 
-        for _,x in enumerate(retur['name']):
-            maxim = contin.chord(x,'y') #the secomd argument acfivates the maximum logic
-            minim = contin.chord(x) #default is minimum
-            table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000 if retur['d_helio'][_] else None} km\n{retur['d_helio'][_]/contin.AU_m if retur['d_helio'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}',f'{minim['nearest']}',f'{maxim['farthest']}')
+
+
+            for _,x in enumerate(retur['name']):
+                maxim = contin.chord(x,'y') #the secomd argument acfivates the maximum logic
+                minim = contin.chord(x) #default is minimum
+                table.add_row(f'{x}',f'{retur['mean_anomaly'][_]}',f'{retur['resp_day'][_]}',f'{retur['d_helio'][_]/1000 if retur['d_helio'][_] else None} km\n{retur['d_helio'][_]/contin.AU_m if retur['d_helio'][_] else None} AU',f'{retur['light_delay_Geo'][_] if retur['light_delay_Geo'][_] else None} s\n{retur['light_delay_Geo'][_]/60 if retur['light_delay_Geo'][_] else None} minutes',f'{retur['lightdelay_sun'][_]} s\n{retur['lightdelay_sun'][_]/60} minutes',f'{retur['r_helio'][_]/1000} km\n{retur['r_helio'][_]/contin.AU_m} AU',f'{retur['inclination'][_]}°',f'{retur['v_helio'][_]} m/s\n{retur['v_helio'][_]/1000} km/s',f'{retur['falclimb'][_]} +==falling\n-==climbing',f'{retur['aphperi'][_]}',f'{minim['nearest']}',f'{maxim['farthest']}')
             
-        console.print(table)
+            console.print(table)
 
 
 
+        #global#..
         console.print(f'''\n\n[bold Cyan]              ..EARTH-Luna System REAL TIME STATES RELATIVE HELIOCENTER and BARYCENTER and EMB ¦use Astlo to get the full states for both frames¦..\n\nUnix time since J2000: [/bold Cyan][bold white]{retu['Unix_time']}//{time.asctime()}[/bold white]\n\n[bold Cyan]Distance to Heliocenter//Sun from Earth or Vice versa: [/bold Cyan][bold white]{retu['r_helio']}[/bold white] [bold yellow](m)[/bold yellow] or [bold white]{retu['r_helio']/1000}[/bold white] [bold yellow](km)[/bold yellow] or [bold white]{retu['r_helio']/contin.AU_m}[/bold white] [bold yellow](AU)[/bold yellow]\n\n[bold Cyan]ONE AU (Astronomical Unit) is equal to the Avg distance from the sun to Earth\nJ2000 is Julian January 1st 2000[/bold Cyan]\n\n[bold Cyan]Orbital velocity: [/bold Cyan][bold white]{retu['v_helio']}[/bold white] [bold yellow](m/s)[/bold yellow] [bold white]{retu['v_helio']/1000}[/bold white] [bold yellow](km/s)[/bold yellow]\n\n[bold Cyan]Mean and Eccentric anomalies: [/bold Cyan][bold white]{retu['M']} {retu['E']}[/bold white] [bold magenta](Respectively)[/bold magenta]\n\n[bold Cyan]Light Delay from Heliocenter to Earth: [/bold Cyan][bold white]{retu['light_delay_sun_helio']}[/bold white] [bold yellow](seconds)[/bold yellow] or [bold white]{retu['light_delay_sun_helio']/60}[/bold white] [bold yellow](minutes)[/bold yellow]\n\n[bold Cyan]Orbital Day out of 365.25: [/bold Cyan][bold white]{retu['resp_day']}[/bold white]\n\n[bold Cyan]Gravitational acceleration due to other bodies: [/bold Cyan][bold white]{mgn}[/bold white] [bold yellow](m/s^2)[/bold yellow]\n''')
      #   console.print(f'\n{lun}')
         ###astlohorizons##

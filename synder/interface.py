@@ -7,7 +7,7 @@ from .solsynder import Synder
 # ---------------------------------------------------------
 
 @click.group
-@click.version_option(version='Solsynder v2.10.300')
+@click.version_option(version='Solsynder v3.0.5300')
 @click.pass_context
 def sin(ctx):
     ctx.obj = Synder()
@@ -18,8 +18,10 @@ def sin(ctx):
 @click.option('--full','-f',default=None,help='giving a value to this will only show the 3D projection without the earth+2D detailed dashboard') #use full and cont to continue to the core solsynder
 @click.option('--earth','-e',default='2D',help='default is 2D for earth real-time pos rendering.')
 @click.option('--jview','-j',default=None,help='giving a value to this will render Jupiter and the inner planets in 3D and continue to main Solsynder core.')
+@click.option('--frame','-fr',default='H',help='choose between B for barycentric SSB and H for heliocentric Sun. default is H',type=str)
+@click.option('--days','-d',default=None,help='give this option a int/float value if you want to tine step to a certain day X. the value passed should strictly be in terms of days. Like if you want to timestep to hour X or minute X or year X just convert them into days before passing the value',type=float)
 @click.pass_obj
-def pin(synder,full,cont,earth,jview):
-    synder.pin(full,cont,earth,jview)
+def pin(synder,full,cont,earth,jview,frame,days):
+    synder.pin(full,cont,earth,jview,frame,days)
 
 
