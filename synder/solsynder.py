@@ -134,14 +134,29 @@ class Synder:
             else:
                 check = contin.rungekutta()
 
+            time.sleep(5) #to obtain new velocity values after delta t 1..for compatibilit..
+
           #  chvhelio = math.sqrt(math.pow(check['v_Xhelio'],2) + math.pow(check['v_Yhelio'],2) + math.pow(check['v_Zhelio'],2))
             for idx,itm in enumerate(contin.supp_objs_names):
-                chvhelio = vectors.magn_vect(check['new_pos_vectors'][idx]) #shine so bright...remember sol is at index 0 therefore index+1
-                v.append(chvhelio)                                                                                                               
-            time.sleep(5) #to obtain new velocity values after delta t 1..for compatibility..
+                if itm=='SUN':
+                    v.append(None)
+                    continue
 
+                con = contin.barycentric(itm)
+                con_vect = [con['X_bary'],con['Y_bary'],con['Z_bary']]
+              #  chvhelio = vectors.magn_vect(check['new_pos_vectors'][idx]) #shine so bright...remember sol is at index 0 therefore index+1
+                chvbary = vectors.magn_vect(con_vect)
+                v.append(chvbary)                                                                                                               
+          #  time.sleep(5) #to obtain new velocity values after delta t 1..for compatibilit..
+            #this allows better determination of aphperi ..after the 5 seconds.. to get the perfect delta v...returned to the top l9gic..trying to figure out why signum always shows negative for all objects if barycentric...
+         #   if days:
+          #      check = contin.rungekutta(None,None,None,days)
+            #     true_anonaly = contin.oscelems(check
+           # else:
+            #    check = contin.rungekutta()
+##if days, needs more wrok because if days, the new vectors will have a timestepp but barycentric will not. barycentric is in real time....the days option then
 
-
+#regardless if days, mean anomaly, respday and aphperi are always in realtime....but that aphperi once days is introduced becomes redundant..using realtime and stepped vevtors = wrong..
 
 
         #retu = contin.barycentric('earth') # the target the Geocentric rule for this project
@@ -186,18 +201,19 @@ class Synder:
 
                 list_day_rep.append(retur['resp_day'] if itm!='SUN' else None) #show both the current and time stepped resp day fro. the true anonaly..should use the true rungekutta true anonaly for rightness haaaha...this shows the real time..if days is None then resp_day_stepped = None.
                 dbary_vector = vectors.sub_vect(check['new_pos_vectors'][idx],check['new_pos_vectors'][contin.supp_objs.get('EARTH','ERROR')]) #if Earth then the resultnis 0,0,0 == None
-                dbary = vectors.magn_vect(dbary_vector)/contin.AU_m #AU if dbary_vector==[0,0,0] then dbary=0.0
+                dbary_m = vectors.magn_vect(dbary_vector) #AU if dbary_vector==[0,0,0] then dbary=0.0
+             #   dbary_AU = dbary_m/contin.AU_m
 
-                list_dbary.append(dbary if itm!='EARTH' else None)
+                list_dbary.append(dbary_m if itm!='EARTH' else None)
 
-                light_delay_bary = dbary/contin.c_m_s #speed of light in  m/s
+                light_delay_bary = dbary_m/contin.c_m_s #speed of light in  m/s
                 list_lightbary.append(light_delay_bary if itm!='EARTH' else None) #seconds..
                 
                 light_delay_ssb = vectors.magn_vect(check['new_pos_vectors'][idx])/contin.c_m_s #seconds
                 list_light_delayssb.append(light_delay_ssb) #yeah i know there is a diff btwn sun and SSB..mostly SSB is inside the sun so.....
 
-                r_bary = vectors.magn_vect(check['new_pos_vectors'][idx])/contin.AU_m #AU
-                list_r_bary.append(r_bary) #AU
+                r_bary = vectors.magn_vect(check['new_pos_vectors'][idx]) #m..the comversion happens in pin method..so i should just pass the meters value..
+                list_r_bary.append(r_bary) #m
                 list_inclination.append(oscelem['osc_i']) #barycentric
                 list_grav_acc.append(vectors.magn_vect(check['new_acc_vectors'][idx])) #only the displayed resp_day_stepped is timestepped if days..if days, the other values ..
           #      list_X_helio.append(retur['X_helio'])
@@ -207,7 +223,8 @@ class Synder:
 
                 #magnitude of velocity vector
              #   v_helio = math.sqrt(math.pow(retur['v_Xhelio'],2) + math.pow(retur['v_Yhelio'],2) + math.pow(retur['v_Zhelio'],2))
-                v_bary = vectors.magn_vect(check['new_vel_vectors'][idx])/1000 #should follow best practice..show if days corrwcltt amd if not days corrwctly the values..km/s
+
+                v_bary = vectors.magn_vect(check['new_vel_vectors'][idx]) #should follow best practice..show if days corrwcltt amd if not days corrwctly the values..m/s
 
                 list_velobary.append(v_bary)
 
@@ -217,21 +234,32 @@ class Synder:
 
 
             for _,old_vhelio in enumerate(v):
+                if _==0: #the sun is special case
+                    fallingor_climbing.append(None)
+                    continue
 
                 delta_v = list_velobary[_] - old_vhelio
-                fallingor_climbing.append(delta_v) #for all 16 bodies...now 21 objects - sun = 20 orbitng objectsm
+                fallingor_climbing.append(delta_v) #for all 16 bodies...now 21 objects + sun = 21 orbitng objectsm
 
-            for _ in fallingor_climbing:
+            for _,itm in enumerate(fallingor_climbing):
                 #sign = vectors.signum(_)
-                if _<0:
+                if _==0:
+                    signum.append('Sun is a special case')
+                    continue #the sun is a special cas
+
+                if itm<0:
                     hu = 'negative'
-                elif _>0:
+                elif itm>0:
                     hu = 'positive'
                 signum.append(hu) #positive if falling and negative if climbing...signum is good for large numbers use x<0 boolean to check if negative or positive
 
             #at perhelion or aphelion ? ssb though..
-            for _ in list_mean_anomaly:
-                j = contin.trunc(_,2) #here....astlo.trunc truncates a float number by the number of decimal places...literally truncates without rounding off...
+            for _,itm in enumerate(list_mean_anomaly):
+                if _==0:
+                    aphperi.append('SUN IS A SPECIAL CASE')
+                    continue
+
+                j = contin.trunc(itm,2) #here....astlo.trunc truncates a float number by the number of decimal places...literally truncates without rounding off...
                 if j in M_p:
                     val = 'APPROACHING PERIAPSIS. CLOSEST POINT TO SUN-SSB'
                 elif j in M_a:
