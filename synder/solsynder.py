@@ -638,9 +638,10 @@ class Synder:
         ##global##
         #retur = self.synder()
         retu = contin.barycentric('earth') #calling another ru gekutta will be time boring..
-        pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
+      #  pt = contin.anmte('earth',None,'y',None,'y') # function anmte contains 6 arguments. self,name,rt,real,baryc,itret for period in seconds orbit plot and scatter.it is a bound method. ..itret for returning the plotext object. 3 parameter for the real plot hsimg the real time osculating elements
         #ppe = mat.matpt('earth') #earth 3ad visual
         #     lun = contin.rtime(None,None,None,'y') #last argument is luna
+        pt = mat.pin(None,'2D',None,'y',None,None)
         ax,ay,az = contin.acce('earth')
         lst = [ax,ay,az]
         mgn = vectors.magn_vect(lst)
@@ -685,8 +686,8 @@ class Synder:
 
             for _,x in enumerate(retur['name']):
                 if days:
-                    maxim = contin.chord(x,'y',days) #the secomd argument acfivates the maximum logic
-                    minim = contin.chord(x,None,days) #default is minimum
+                    maxim = contin.chord_bary(x,'y',days) #the secomd argument acfivates the maximum logic
+                    minim = contin.chord_bary(x,None,days) #default is minimum
                 else:
                     maxim = contin.chord_bary(x,'y')
                     minim = contin.chord_bary(x)
