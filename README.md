@@ -11,10 +11,10 @@ One command. One screen. Live view of the entire solar system.
 
 ---
 
-## Features
-
+## previous
+- in Barycentric modethe falling towrds sun column in the table does not update correctly and only displays *negative* becayse it uses rk4 with an intrnal delta t of (real-time + 1hour). That would reauire making solsynder delay for a whole hour plus just to make that specific column show the correvt results.. Heliocebtric mode perfectly updates that column and within that <40s because the methods returning the vectors in heliocentuc mode have no internal delta-t
 - **Single-screen real-time dashboard** — everything refreshes in one view
-- **16 solar system bodies** tracked simultaneously (planets + dwarf planets)
+- **21 solar system bodies** tracked simultaneously (planets + dwarf planets)
 - **Only one dependency**: [astlo](https://github.com/iamnothimbutwe/astlopublic) (the core orbital mechanics engine)
 - Dedicated **Earth State** section with rich vector information
 - Real-time **orbital plot** showing Earth’s position in its orbit
