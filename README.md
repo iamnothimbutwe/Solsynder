@@ -13,8 +13,9 @@ One command. One screen. Live view of the entire solar system.
 
 ## previous
 - in Barycentric modethe falling towrds sun column in the table does not update correctly and only displays *negative* becayse it uses rk4 with an intrnal delta t of (real-time + 1hour). That would reauire making solsynder delay for a whole hour plus just to make that specific column show the correvt results.. Heliocebtric mode perfectly updates that column and within that <40s because the methods returning the vectors in heliocentuc mode have no internal delta-t
+- shows the EMB Earth Moon Barycenter details and the current moon face and phase. Use astlo or valley to get the topocentric states relative any location on earth offline. The **geocentric** states for the moon are wrong. The EMB states are very 100% correct states. 
 - **Single-screen real-time dashboard** — everything refreshes in one view
-- **21 solar system bodies** tracked simultaneously (planets + dwarf planets)
+- **21 solar system bodies** tracked simultaneously (planets + dwarf planets) including the moon Luna making it 22 objects.
 - **Only one dependency**: [astlo](https://github.com/iamnothimbutwe/astlopublic) (the core orbital mechanics engine)
 - Dedicated **Earth State** section with rich vector information
 - Real-time **orbital plot** showing Earth’s position in its orbit
@@ -25,6 +26,9 @@ One command. One screen. Live view of the entire solar system.
   - one Osculating element ¦inclination¦ in degrees° ¦reference frame is J2000 and the epoch is real time
 - Runs smoothly on mobile (Termux on Android / Itel RS4 and similar devices)
 - Pure Python, lightweight, and built from scratch on a budget phone
+
+
+**use a mobile device for a best experience for the plots...**
 
 ---
 
